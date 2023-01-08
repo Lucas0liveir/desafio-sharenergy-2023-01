@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String     @id @default(uuid()) @map("_id")
+  username      String     @unique()
+  email         String     @unique()
+  refresh_token String?
+  password      String
+  created_at    DateTime   @default(now())
+  updated_at    DateTime   @default(now())
+  Customer      Customer[]
+
+  @@map("user")
+}
+
+model Customer {
+  id         String   @id @default(uuid()) @map("_id")
+  email      String   @unique()
+  name       String
+  cell_phone String
+  cpf        String   @unique()
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  address    Address  @relation(fields: [addressId], references: [id])
+  addressId  String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  @@map("customer")
+}
+
+model Address {
+  id           String     @id @default(uuid()) @map("_id")
+  street       String
+  city         String
+  uf           String
+  number       Int
+  neighborhood String
+  created_at   DateTime   @default(now())
+  updated_at   DateTime   @default(now())
+  Customer     Customer[]
+
+  @@map("address")
+}
