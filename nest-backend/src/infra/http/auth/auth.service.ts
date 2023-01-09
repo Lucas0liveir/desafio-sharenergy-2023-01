@@ -59,7 +59,8 @@ export class AuthService {
     }
 
     async refreshTokens(user: any, refreshToken: string) {
-        const refresh_token = await this.userRepository.findRefreshToken(user.id);
+
+        const refresh_token = await this.userRepository.findRefreshToken(user.sub);
 
         if (!refresh_token) throw new ForbiddenException('Accesso negado')
 

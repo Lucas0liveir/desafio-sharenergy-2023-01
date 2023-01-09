@@ -4,10 +4,11 @@ import { ApiProperty } from '@nestjs/swagger';
 export class CreateUserBody {
 
     @ApiProperty({ example: "desafiosharenergy", description: "username do usuário." })
-    @IsString()
     @IsNotEmpty()
+    @MinLength(6)
     @MaxLength(48)
-    userName: string;
+    @IsString()
+    username: string;
 
     @ApiProperty({ example: "desafiosharenergy@sharenergy.com", description: "email do usuário." })
     @IsNotEmpty()

@@ -2,7 +2,7 @@ import { AuthService } from '@infra/http/auth/auth.service';
 import { LocalAuthGuard } from '@infra/http/auth/guards/local-auth.guard';
 import { RefreshTokenGuard } from '@infra/http/auth/guards/refresh-token.guard';
 import { UserLoginBody } from '@infra/http/dtos/accounts/user-login-body';
-import { Controller, Request, Post, UseGuards, Req, Body } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Req, Body, UnauthorizedException } from '@nestjs/common';
 
 @Controller('accounts')
 export class AuthController {

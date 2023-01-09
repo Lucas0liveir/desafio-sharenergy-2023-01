@@ -1,5 +1,16 @@
 version: '3.9'
 services:
+  frontend:
+    container_name: front_react
+    working_dir: /front-end-react
+    build: ./front-end-react
+    platform: linux/x86_64
+    depends_on:
+      - backend
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./front-end-react:/front-end-react
   backend:
     container_name: nest_backend
     build: ./nest-backend
