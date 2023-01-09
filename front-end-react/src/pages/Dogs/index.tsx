@@ -1,7 +1,12 @@
+import { Layout } from "../../components/Layout";
 
-export function Dogs () {
+export function Dogs() {
 
     return (
-        <div></div>
+        <Layout>
+            <div>
+                ola
+            </div>
+        </Layout>
     )
 }

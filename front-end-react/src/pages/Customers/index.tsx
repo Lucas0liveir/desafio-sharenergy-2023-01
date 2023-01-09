@@ -1,7 +1,12 @@
+import { Layout } from "../../components/Layout";
 
-export function Customers () {
+export function Customers() {
 
     return (
-        <div></div>
+        <Layout>
+            <div>
+                ola
+            </div>
+        </Layout>
     )
 }

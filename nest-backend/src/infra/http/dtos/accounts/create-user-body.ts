@@ -5,7 +5,6 @@ export class CreateUserBody {
 
     @ApiProperty({ example: "desafiosharenergy", description: "username do usuário." })
     @IsNotEmpty()
-    @MinLength(6)
     @MaxLength(48)
     @IsString()
     username: string;
@@ -20,6 +19,5 @@ export class CreateUserBody {
     @MinLength(8)
     @MaxLength(24)
     @IsString()
-    @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'password too weak' })
     password: string;
 }

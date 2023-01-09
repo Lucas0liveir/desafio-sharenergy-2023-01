@@ -1,4 +1,3 @@
-import { map } from "rxjs";
 import IHttpRequest from "../adapters/httpRequest/IHttpRequest.adapter";
 
 import { httpRequest } from "./httpRequestDefault";
@@ -57,6 +56,7 @@ class AuthService {
         localStorage.removeItem("access_token")
         localStorage.removeItem("refresh_token")
         localStorage.removeItem("user")
+        this.setUser({} as User)
     }
 
     setLocalStorageAccessToken(token: string) {

@@ -2,9 +2,9 @@
     width: 32rem;
     position: relative;
     border-radius: 8px;
-    box-shadow: 1px 1px 13px 0px rgba(0, 0, 0, 0.75);
-    -webkit-box-shadow: 1px 1px 13px 0px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 1px 1px 13px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 1px 9px 20px -7px rgba(0,0,0,0.66);
+    -webkit-box-shadow: 1px 9px 20px -7px rgba(0,0,0,0.66);
+    -moz-box-shadow: 1px 9px 20px -7px rgba(0,0,0,0.66);
 }
 
 .tab-content {

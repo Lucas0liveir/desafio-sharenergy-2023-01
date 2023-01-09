@@ -1,7 +1,12 @@
+import { Layout } from "../../components/Layout";
 
-export function Cats () {
+export function Cats() {
 
     return (
-        <div></div>
+        <Layout>
+            <div>
+                ola
+            </div>
+        </Layout>
     )
 }

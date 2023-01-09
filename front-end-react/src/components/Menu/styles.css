@@ -1,0 +1,18 @@
+.menu {
+    position: relative;
+    display: inline-block;
+}
+
+.menu-button {
+    cursor: pointer;
+}
+
+.menu-list {
+    position: absolute;
+    display: none;
+    z-index: 1;
+}
+ 
+.menu-list.open {
+    display: block;
+}
