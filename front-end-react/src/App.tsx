@@ -1,10 +1,13 @@
+import { Toaster } from 'react-hot-toast'
 import PageRoutes from './routes'
 
 function App() {
 
   return (
-
-    <PageRoutes />
+    <>
+      <Toaster />
+      <PageRoutes />
+    </>
 
   )
 }

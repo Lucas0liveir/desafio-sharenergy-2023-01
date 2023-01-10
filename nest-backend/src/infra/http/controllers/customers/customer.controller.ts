@@ -26,10 +26,10 @@ export class CustomerController {
     async create(@Req() req, @Body() createCustomerBody: CreateCustomerBody) {
 
         const { userId } = req.user
-        const { adress, cellPhone, cpf, email, name } = createCustomerBody;
+        const { address, cellPhone, cpf, email, name } = createCustomerBody;
 
         const { customer } = await this.createCustomer.execute({
-            adressDTO: adress,
+            adressDTO: address,
             cellPhone,
             cpf,
             email,
@@ -69,11 +69,11 @@ export class CustomerController {
     async edit(@Req() req, @Body() editCustomerBody: UpdateCustomerBody) {
 
         const { userId } = req.user
-        const { id, adress, cellPhone, cpf, email, name } = editCustomerBody;
+        const { id, address, cellPhone, cpf, email, name } = editCustomerBody;
 
         const { customer } = await this.editCustomer.execute({
             customer: new Customer({
-                adress,
+                adress: address,
                 cellPhone,
                 cpf,
                 email,

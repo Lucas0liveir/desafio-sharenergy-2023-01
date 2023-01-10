@@ -40,5 +40,5 @@ export class CreateCustomerBody {
     })
     @IsNotEmpty()
     @IsObject()
-    adress: Address;
+    address: Address;
 }

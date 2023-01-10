@@ -37,11 +37,6 @@
     background-color: #f3f3f3;
 }
 
-.tr:hover {
-    cursor: pointer;
-    background-color: #ebdfca;
-}
-
 .input-container {
     display: flex;
     justify-content: flex-end;

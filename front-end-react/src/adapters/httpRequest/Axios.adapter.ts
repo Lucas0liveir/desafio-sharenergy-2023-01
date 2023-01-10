@@ -8,6 +8,34 @@ export default class AxiosAdapter implements IHttpRequest {
         this.httpRequest = axios.create({
             baseURL
         });
+
+        this.httpRequest.interceptors.response.use((response) => response,
+            async err => {
+                if (err.response) {
+                    const { status, data } = err.response
+
+                    switch (status) {
+                        case 401:
+                            if (data.message === "token_expired") {
+                                try {
+                                    await this.refreshToken()
+
+                                    const config = err.config
+
+                                    return this.httpRequest({ method: config.method, url: config.url, data: config.data })
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                            }
+                        default:
+                            return Promise.reject(err)
+                    }
+                } else if (err.request) {
+                    return Promise.reject(err)
+                } else {
+                    return Promise.reject(err)
+                }
+            })
     }
 
     isAuthenticated(): boolean {
@@ -23,32 +51,22 @@ export default class AxiosAdapter implements IHttpRequest {
         this.httpRequest.defaults.headers.common.Authorization = '';
     }
 
-    // onError(error: any) {
-    //     if (error?.response?.status === 401 && error?.response?.data.message === 'token_expired') {
-    //         const refreshToken = localStorage.getItem('refresh_token');
-    //         this.httpRequest
-    //             .post<{
-    //                 accessToken: string,
-    //                 refreshToken: string
-    //             }>('/accounts/auth/refresh-token', { refresh_token: refreshToken })
-    //             .pipe(map(response => {
-    //                 const newToken = response.data.accessToken;
-    //                 const newRefreshToken = response.data.refreshToken;
+    async refreshToken() {
+        const refreshToken = localStorage.getItem('refresh_token')
+        this.setToken(refreshToken!)
 
-    //                 this.setToken(newToken);
+        const { data } = await this.httpRequest
+            .post<{
+                accessToken: string,
+                refreshToken: string
+            }>('/accounts/auth/refresh-token')
 
-    //                 localStorage.setItem('access_token', newToken);
-    //                 localStorage.setItem('refresh_token', newRefreshToken);
+        const { accessToken, refreshToken: newRefreshToken } = data
 
-    //                 return this.httpRequest.post(error.config.url, error.config.data);
-    //             }));
-    //     }
-
-    //     if (error?.response?.data) {
-    //         return throwError(() => error.response.data);
-    //     }
-    //     return throwError(() => error);
-    // }
+        localStorage.setItem('access_token', accessToken);
+        localStorage.setItem('refresh_token', newRefreshToken);
+        this.setToken(accessToken);
+    }
 
     async post<TResponse, TBody>(url: string, data?: TBody, headers?: any) {
         return await this.httpRequest.post<TResponse>(url, data, { headers })

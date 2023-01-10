@@ -9,7 +9,6 @@ import "./styles.css"
 export function Dogs() {
 
     const [dataUrlsIds, setDataUrlsIds] = useState<string[]>([])
-    const [imageCompleteLoaded, setCompleteImageLoaded] = useState(true)
     const [dogsUrl, setDogsUrl] = useState('')
 
     let dogsBaseUrl = 'https://random.dog/'
@@ -49,15 +48,9 @@ export function Dogs() {
     }
 
     function handleRefreshDogImage() {
-        setCompleteImageLoaded(false)
-        let maxIndex = Math.random() * (dataUrlsIds.length - 1)
+        let maxIndex = Math.random() * (dataUrlsIds.length - 10)
         setDogsUrl(`${dogsBaseUrl}${dataUrlsIds[Math.floor(maxIndex)]}`)
     }
-
-    function handleLoadedImage() {
-        setCompleteImageLoaded(true)
-    }
-
 
     return (
         <Layout>
@@ -65,7 +58,6 @@ export function Dogs() {
                 <div className="dogs-grid-item">
                     <div>
                         <button
-                            disabled={!imageCompleteLoaded}
                             onClick={() => handleRefreshDogImage()}
                             className="button-refresh-dog">
 
@@ -80,7 +72,6 @@ export function Dogs() {
                     <div>
                         {dogsUrl.length > 0 ? (
                             <img
-                                onLoad={handleLoadedImage}
                                 height={350}
                                 width={350}
                                 src={dogsUrl}
