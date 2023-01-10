@@ -1,3 +1,6 @@
 import { makeHttpRequest } from "../adapters/httpRequest";
 
-export const httpRequest = makeHttpRequest("http://192.168.0.5:3000")
+console.log(import.meta.env.VITE_REACT_API_URL);
+
+
+export const httpRequest = makeHttpRequest(import.meta.env.VITE_REACT_API_URL)

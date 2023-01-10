@@ -18,15 +18,15 @@ export class CreateCustomerBody {
     @ApiProperty({ example: "00000000000", description: "cpf do cliente" })
     @IsString()
     @IsNotEmpty()
-    @MinLength(11)
-    @MaxLength(11)
+    @MinLength(14)
+    @MaxLength(14)
     cpf: string;
 
     @ApiProperty({ example: "99999999999", description: "número de telefone do cliente" })
     @IsString()
     @IsNotEmpty()
-    @MinLength(11)
-    @MaxLength(11)
+    @MinLength(15)
+    @MaxLength(15)
     cellPhone: string;
 
     @ApiProperty({

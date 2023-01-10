@@ -1,5 +1,3 @@
-import { AuthService } from '@infra/http/auth/auth.service';
-import { LocalAuthGuard } from '@infra/http/auth/guards/local-auth.guard';
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from '@infra/database/prisma/prisma.service';
 import { PrismaUserRepository } from '@infra/database/prisma/repositories/accounts/prisma-user-repository';
@@ -12,9 +10,6 @@ import { DeleteCustomer } from '@application/customers/use-cases/delete-customer
 import { EditCustomer } from '@application/customers/use-cases/edit-customer';
 import { CustomerRepository } from '@application/customers/repositories/customer-repository';
 import { CustomerViewModel } from '@infra/http/view-models/customers/customer-view-model';
-import { UnauthorizedException } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-
 
 const customerRepositoryMock = {
     findByUserName: jest.fn(),
@@ -87,7 +82,7 @@ describe('CustomerController', () => {
         })
 
         expect(await customerController.create(req, {
-            adress: customer.adress,
+            address: customer.adress,
             cellPhone: customer.cellPhone,
             cpf: customer.cpf,
             email: customer.email,
@@ -120,7 +115,7 @@ describe('CustomerController', () => {
 
         expect(await customerController.edit(req, {
             id: customer.id,
-            adress: customer.adress,
+            address: customer.adress,
             cellPhone: customer.cellPhone,
             cpf: customer.cpf,
             email: customer.email,

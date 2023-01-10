@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Layout } from "../../components/Layout";
 import { FiRefreshCcw } from "react-icons/fi";
 import Lottie from 'react-lottie';
@@ -49,6 +49,11 @@ export function Dogs() {
 
     function handleRefreshDogImage() {
         let maxIndex = Math.random() * (dataUrlsIds.length - 10)
+
+        while (maxIndex === undefined) {
+            maxIndex = Math.random() * (dataUrlsIds.length - 10)
+        }
+        
         setDogsUrl(`${dogsBaseUrl}${dataUrlsIds[Math.floor(maxIndex)]}`)
     }
 

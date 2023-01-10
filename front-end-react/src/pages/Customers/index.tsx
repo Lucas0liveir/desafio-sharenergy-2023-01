@@ -4,10 +4,11 @@ import Modal from 'react-modal';
 import { Page, Pagination } from "../../components/Pagination";
 import { Table } from "../../components/Table";
 import { Customer, customerService } from "../../service/customers.service";
-import "./styles.css";
 import useModal from "../../hooks/useModal";
 import { toast } from "react-hot-toast";
 import { FaPlus } from "react-icons/fa";
+import { maskCpf, maskPhoneNumber } from "../../helpers/mask";
+import "./styles.css";
 
 const customStyles = {
     content: {
@@ -94,17 +95,97 @@ export function Customers() {
         setSearch(value)
     }
 
+    function cleanForm() {
+        setFormAddress({})
+        setFormCustomer({} as Customer)
+    }
+
+    async function handleCreate(e: React.ChangeEvent<HTMLFormElement>) {
+
+        e.preventDefault()
+
+        const isValidFormCustomer = Object.values(formCustomer)
+            .every((item: string) => item.length > 0)
+
+        const isValidFormAddress = Object.values(formAddress)
+            .every((item: any) => item.length > 0)
+
+        if ((!isValidFormAddress || Object.values(formAddress).length === 0)
+            || (!isValidFormCustomer || Object.values(formCustomer).length === 0)) {
+
+            toast.error('Favor informar todos os dados', {
+                duration: 4000,
+                position: 'top-right',
+                className: '',
+                ariaProps: {
+                    role: 'status',
+                    'aria-live': 'polite',
+                }
+            })
+            return
+        }
+
+        const customer = {
+            ...selectedModalView,
+            ...formCustomer,
+            address: {
+                ...selectedModalView.address,
+                ...formAddress,
+                number: Number(formAddress?.number)
+            }
+        }
+
+        delete customer.create
+
+        try {
+
+            setLoading(true)
+
+            await customerService.create(customer)
+
+            cleanForm()
+            handleFetchCustomers()
+            closeModalView()
+
+            toast.success('Criado com sucesso', {
+                duration: 4000,
+                position: 'top-right',
+                className: '',
+                iconTheme: {
+                    primary: '#00a000',
+                    secondary: '#fff',
+                },
+                ariaProps: {
+                    role: 'status',
+                    'aria-live': 'polite',
+                }
+            })
+
+        } catch (e) {
+            setLoading(false)
+            console.log(e);
+
+        }
+    }
+
     async function handleSubmitEdit(e: React.ChangeEvent<HTMLFormElement>) {
         e.preventDefault()
-        if (Object.keys(formCustomer).length < 1
-            && Object.keys(formAddress).length < 1) return
+
+        const isValidFormCustomer = Object.values(formCustomer)
+            .some((item: string) => item.length > 0)
+
+        const isValidFormAddress = Object.values(formAddress)
+            .some((item: any) => item.length > 0)
+
+        if (!isValidFormCustomer && !isValidFormAddress) return
 
         const editedCustomer = {
             ...selectedModalView,
             ...formCustomer,
             address: {
                 ...selectedModalView.address,
-                ...formAddress
+                ...formAddress,
+                number: Number(selectedModalView.address.number ?? formAddress?.number)
             }
         }
 
@@ -115,8 +196,7 @@ export function Customers() {
             setLoading(true)
             await customerService.edit(editedCustomer)
 
-            setFormAddress({})
-            setFormCustomer({} as Customer)
+            cleanForm()
 
             handleFetchCustomers()
             closeModalView()
@@ -182,10 +262,17 @@ export function Customers() {
     function handleChangeForm(e: React.ChangeEvent<HTMLInputElement>) {
         const { value, name } = e.target
 
-        if (value.trim().length === 0) return
+        let formValue = value
 
-        setFormCustomer(prev => {
-            const newData = { ...prev, [name]: value }
+        if (name === "cpf") {
+            formValue = maskCpf(value)
+        }
+        if (name === "cellPhone") {
+            formValue = maskPhoneNumber(value)
+        }
+
+        setFormCustomer((prev: any) => {
+            const newData = { ...prev, [name]: formValue }
             return newData
         })
     }
@@ -193,7 +280,13 @@ export function Customers() {
     function handleChangeFormAdress(e: React.ChangeEvent<HTMLInputElement>) {
         const { value, name } = e.target
 
-        if (value.trim().length === 0) return
+        let formValue = value
+
+        let regexNumbers = /^\d+$/
+
+        if (name === "number" && (formValue.length > 0 && !regexNumbers.test(formValue))) {
+            return
+        }
 
         setFormAddress((prev: any) => {
             const newData = { ...prev, [name]: value }
@@ -249,7 +342,7 @@ export function Customers() {
                 onRequestClose={loading ? () => { } : closeModalView}
                 style={customStyles}
             >
-                <form onSubmit={handleSubmitEdit} className="modal-form">
+                <form onSubmit={selectedModalView?.create ? handleCreate : handleSubmitEdit} className="modal-form">
                     <div className="modal-header">
                         <h3>Informações do cliente</h3>
                     </div>
@@ -264,7 +357,7 @@ export function Customers() {
                                     value={formCustomer.name}
                                     onChange={handleChangeForm}
                                     defaultValue={selectedModalView?.name}
-                                    placeholder="nome"
+                                    placeholder="fulano de tal"
                                     type={"text"}
                                 />
                             </div>
@@ -277,6 +370,7 @@ export function Customers() {
                                     value={formCustomer.email}
                                     onChange={handleChangeForm}
                                     defaultValue={selectedModalView?.email}
+                                    placeholder="cliente@email.com"
                                     type={"email"}
                                 />
                             </div>
@@ -286,11 +380,13 @@ export function Customers() {
                                 <p>CPF</p>
                                 <input
                                     name="cpf"
-                                    minLength={11}
+                                    minLength={14}
+                                    maxLength={14}
                                     disabled={selectedModalView?.viewModal || loading}
                                     value={formCustomer.cpf}
                                     onChange={handleChangeForm}
                                     defaultValue={selectedModalView?.cpf}
+                                    placeholder="999.999.999-99"
                                     type={"text"}
                                 />
                             </div>
@@ -298,11 +394,13 @@ export function Customers() {
                                 <p>Telefone</p>
                                 <input
                                     name="cellPhone"
-                                    minLength={11}
+                                    minLength={15}
+                                    maxLength={15}
                                     disabled={selectedModalView?.viewModal || loading}
                                     value={formCustomer.cellPhone}
                                     onChange={handleChangeForm}
                                     defaultValue={selectedModalView?.cellPhone}
+                                    placeholder="73999999999"
                                     type={"text"}
                                 />
                             </div>
@@ -324,7 +422,7 @@ export function Customers() {
                                     disabled={selectedModalView?.viewModal || loading}
                                     value={formAddress?.street}
                                     defaultValue={selectedModalView?.address?.street}
-                                    placeholder="nome"
+                                    placeholder="rua das flores"
                                     type={"text"}
                                 />
                             </div>
@@ -337,6 +435,7 @@ export function Customers() {
                                     disabled={selectedModalView?.viewModal || loading}
                                     value={formAddress?.neighborhood}
                                     defaultValue={selectedModalView?.address?.neighborhood}
+                                    placeholder="encantador"
                                     type={"text"}
                                 />
                             </div>
@@ -349,6 +448,7 @@ export function Customers() {
                                     disabled={selectedModalView?.viewModal || loading}
                                     value={formAddress?.uf}
                                     defaultValue={selectedModalView?.address?.uf}
+                                    placeholder="bahia"
                                     type={"text"}
                                 />
                             </div>
@@ -358,11 +458,12 @@ export function Customers() {
                                 <p>Número</p>
                                 <input
                                     name="number"
-                                    minLength={3}
+                                    minLength={1}
                                     onChange={handleChangeFormAdress}
                                     disabled={selectedModalView?.viewModal || loading}
                                     value={formAddress?.number}
                                     defaultValue={selectedModalView?.address?.number}
+                                    placeholder="0"
                                     type={"text"}
                                 />
                             </div>
@@ -375,6 +476,7 @@ export function Customers() {
                                     disabled={selectedModalView?.viewModal || loading}
                                     value={formAddress?.city}
                                     defaultValue={selectedModalView?.address?.city}
+                                    placeholder="porto seguro"
                                     type={"text"}
                                 />
                             </div>
@@ -407,12 +509,14 @@ export function Customers() {
             <div className="container-customers">
                 <div className="wrapper-table">
                     <div className="container-add-btn">
-                        <button className="button-add">
-                            <FaPlus 
-                            size={22}
-                            style={{
-                                marginRight: 10
-                            }} />
+                        <button
+                            onClick={() => openModalView({ create: true })}
+                            className="button-add">
+                            <FaPlus
+                                size={22}
+                                style={{
+                                    marginRight: 10
+                                }} />
                             Novo cliente</button>
                     </div>
                     <Table
@@ -420,10 +524,10 @@ export function Customers() {
                         search={handleSetSearch}
                         caption="Clientes"
                         headers={{
-                            name: "nome",
-                            cpf: "cpf",
-                            email: "email",
-                            cellPhone: "telefone",
+                            name: "Nome",
+                            cpf: "CPF",
+                            email: "Email",
+                            cellPhone: "Telefone",
                             view: "Visualizar",
                             edit: "Editar",
                             delete: "Deletar"

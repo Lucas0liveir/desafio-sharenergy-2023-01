@@ -48,6 +48,10 @@ class CustomersService {
         return await this.httpRequest.put("/customer/edit", { ...customer })
     }
 
+    async create(customer: Customer) {
+        return await this.httpRequest.post("/customer/create", { ...customer })
+    }
+
     async delete(id: string) {
         return await this.httpRequest.delete(`/customer?id=${id}`)
     }
