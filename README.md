@@ -56,3 +56,6 @@ Rode os testes com o comando:
 ```sh
 yarn test ou npm run test
 ```
+
+## Vídeo
+- [Link do vídeo](https://youtu.be/oRQL8BcCYSI)
