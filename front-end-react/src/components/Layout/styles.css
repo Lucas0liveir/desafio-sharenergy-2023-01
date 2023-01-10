@@ -1,8 +1,14 @@
 @media only screen and (max-width: 768px) {
+    body {
+        overflow: hidden !important;
+    }
+
     .sidebar {
         position: absolute;
         z-index: 9999;
-        height: 90vh;
+        height: 95vh;
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
         width: 100vw !important;
     }
 
@@ -11,8 +17,16 @@
     }
 
     .sidebar.open {
+        overflow-x: hidden !important;
+        overflow-y: hidden !important;
         transform: translateX(-100vw) !important;
     }
+}
+
+.container {
+    width: 100vw;
+    height: 100vh;
+    overflow-x: hidden;
 }
 
 .content-pages.open {
@@ -21,6 +35,7 @@
 
 .content-pages {
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,19 +48,20 @@
     justify-content: center;
 }
 
-.container {
-    width: 100vw;
-}
-
 .content {
     display: flex;
     background-color: #f1f1f1;
     width: 100vw !important;
-    min-height: 90vh;
+    min-height: 100vh !important;
 }
 
 .menu-toggle-mobile {
     display: none;
+}
+
+.header .sticky {
+    position: fixed;
+    z-index: 999;
 }
 
 .header {
@@ -65,7 +81,6 @@
 .sidebar {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
     background-color: #fff;
     color: #fff;
     width: 280px;

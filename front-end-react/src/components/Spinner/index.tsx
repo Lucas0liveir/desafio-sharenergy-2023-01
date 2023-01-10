@@ -1,9 +1,19 @@
 import "./styles.css"
 
-export function Spinner() {
+type Props = {
+    color?: string
+}
+
+export function Spinner({ color }: Props) {
 
     return (
-        <div className="lds-ring">
+        <div
+            style={
+                {
+                    borderColor: `${color ? color : "#fff"} transparent transparent transparent`
+                }
+            }
+            className="lds-ring">
             <div>
             </div>
             <div>

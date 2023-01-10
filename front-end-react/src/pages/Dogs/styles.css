@@ -1,0 +1,47 @@
+@media only screen and (max-width: 768px) {
+    .container-dogs {
+        grid-template-columns: repeat(auto-fit, 500px) !important;
+    }
+}
+
+@media only screen and (max-width: 568px) {
+    .container-dogs {
+        grid-template-columns: repeat(auto-fit, 400px) !important;
+    }
+}
+
+@media only screen and (max-width: 360px) {
+    .container-dogs {
+        grid-template-columns: repeat(auto-fit, 300px) !important;
+    }
+}
+
+.container-dogs {
+    display: grid;
+    grid-template-columns: auto auto;
+    padding: 32px;
+    width: 100% !important;
+    border-radius: 8px;
+    height: 100%;
+    min-height: 500px;
+}
+
+.dogs-grid-item {
+    width: 100%;
+    padding: 32px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+}
+
+.button-refresh-dog {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.button-refresh-dog:hover {
+    transform: scale(1.1);
+    background-color: rgba(95, 186, 233, .5) !important;
+}
